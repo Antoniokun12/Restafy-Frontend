@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh LpR lFr">
+  <q-layout view="hHh LpR fFf">
     <q-header elevated class="bg-grey-9 text-white" height-hint="98">
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
@@ -13,9 +13,9 @@
           }"
         >
           <q-avatar size="100px" :style="{ marginRight: '20px' }">
-            <!-- <img src="/header.png" /> -->
+          <img src="/icono_home.png" />
           </q-avatar>
-          GYM
+        
         </q-toolbar-title>
 
         <q-btn
@@ -37,8 +37,8 @@
 
     <q-drawer v-model="leftDrawerOpen" side="left" overlay elevated>
       <router-link
-        v-if="canAccess(['Administrador'])"
-        to="/usuarios"
+    
+        to="/productos"
         class="drawer-link"
         active-class="drawer-link-active"
       >
@@ -47,14 +47,14 @@
             <q-icon name="person" size="36px" />
           </q-item-section>
           <q-item-section>
-            <q-item-label>Usuarios</q-item-label>
+            <q-item-label>Productos</q-item-label>
           </q-item-section>
         </q-item>
       </router-link>
 
       <router-link
-        v-if="canAccess(['Administrador', 'Instructor', 'Recepcionista'])"
-        to="/clientes"
+        
+        to="/pedidos"
         class="drawer-link"
         active-class="drawer-link-active"
       >
@@ -63,14 +63,14 @@
             <q-icon name="people" size="36px" />
           </q-item-section>
           <q-item-section>
-            <q-item-label>Clientes</q-item-label>
+            <q-item-label>Pedidos</q-item-label>
           </q-item-section>
         </q-item>
       </router-link>
 
       <router-link
-        v-if="canAccess(['Administrador'])"
-        to="/sedes"
+        
+        to="/ventas"
         class="drawer-link"
         active-class="drawer-link-active"
       >
@@ -79,14 +79,14 @@
             <q-icon name="location_city" size="36px" />
           </q-item-section>
           <q-item-section>
-            <q-item-label>Sedes</q-item-label>
+            <q-item-label>Ventas</q-item-label>
           </q-item-section>
         </q-item>
       </router-link>
 
       <router-link
-        v-if="canAccess(['Administrador', 'Instructor', 'Recepcionista'])"
-        to="/ingresos"
+        
+        to="/facturas"
         class="drawer-link"
         active-class="drawer-link-active"
       >
@@ -95,14 +95,14 @@
             <q-icon name="exit_to_app" size="36px" />
           </q-item-section>
           <q-item-section>
-            <q-item-label>Ingresos</q-item-label>
+            <q-item-label>Facturas</q-item-label>
           </q-item-section>
         </q-item>
       </router-link>
 
       <router-link
-        v-if="canAccess(['Administrador'])"
-        to="/planes"
+       
+        to="/empleados"
         class="drawer-link"
         active-class="drawer-link-active"
       >
@@ -111,14 +111,14 @@
             <q-icon name="assignment" size="36px" />
           </q-item-section>
           <q-item-section>
-            <q-item-label>Planes</q-item-label>
+            <q-item-label>Empleados</q-item-label>
           </q-item-section>
         </q-item>
       </router-link>
 
       <router-link
-        v-if="canAccess(['Administrador'])"
-        to="/pagos"
+        
+        to="/nomina"
         class="drawer-link"
         active-class="drawer-link-active"
       >
@@ -127,14 +127,14 @@
             <q-icon name="payment" size="36px" />
           </q-item-section>
           <q-item-section>
-            <q-item-label>Pagos</q-item-label>
+            <q-item-label>Nomina</q-item-label>
           </q-item-section>
         </q-item>
       </router-link>
 
       <router-link
-        v-if="canAccess(['Administrador', 'Recepcionista'])"
-        to="/inventario"
+      
+        to="/gastos"
         class="drawer-link"
         active-class="drawer-link-active"
       >
@@ -143,14 +143,14 @@
             <q-icon name="store" size="36px" />
           </q-item-section>
           <q-item-section>
-            <q-item-label>Inventario</q-item-label>
+            <q-item-label>Gastos</q-item-label>
           </q-item-section>
         </q-item>
       </router-link>
 
       <router-link
-        v-if="canAccess(['Administrador', 'Recepcionista'])"
-        to="/ventas"
+       
+        to="/balance_mensual"
         class="drawer-link"
         active-class="drawer-link-active"
       >
@@ -159,14 +159,14 @@
             <q-icon name="local_mall" size="36px" />
           </q-item-section>
           <q-item-section>
-            <q-item-label>Ventas</q-item-label>
+            <q-item-label>Balance Mensual</q-item-label>
           </q-item-section>
         </q-item>
       </router-link>
 
       <router-link
-        v-if="canAccess(['Administrador', 'Recepcionista'])"
-        to="/maquinas"
+        
+        to="/inventario"
         class="drawer-link"
         active-class="drawer-link-active"
       >
@@ -175,14 +175,14 @@
             <q-icon name="fitness_center" size="36px" />
           </q-item-section>
           <q-item-section>
-            <q-item-label>Maquinas</q-item-label>
+            <q-item-label>Inventario</q-item-label>
           </q-item-section>
         </q-item>
       </router-link>
 
       <router-link
-        v-if="canAccess(['Administrador', 'Recepcionista'])"
-        to="/mantenimientos"
+      
+        to="/usuarios"
         class="drawer-link"
         active-class="drawer-link-active"
       >
@@ -191,7 +191,7 @@
             <q-icon name="build" size="36px" />
           </q-item-section>
           <q-item-section>
-            <q-item-label>Mantenimientos</q-item-label>
+            <q-item-label>Usuarios</q-item-label>
           </q-item-section>
         </q-item>
       </router-link>
@@ -224,15 +224,6 @@
           </q-item>
           <q-item>
             <q-item-section avatar>
-              <q-icon name="phone" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label caption>Teléfono</q-item-label>
-              <q-item-label>{{ usuario.telefono }}</q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-item>
-            <q-item-section avatar>
               <q-icon name="work" />
             </q-item-section>
             <q-item-section>
@@ -256,7 +247,7 @@
       <router-view></router-view>
     </q-page-container>
 
-    <q-footer :reveal="true" elevated class="bg-grey-10 text-white">
+    <q-footer elevated class="bg-grey-10 text-white">
       <q-toolbar>
         <q-toolbar-title>
           <div class="footer-content q-pa-md">

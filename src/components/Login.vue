@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <div class="q-pa-md" style="max-width: 400px">
+    <div class="q-pa-md" style="min-width: 300px">
       <h1 class="titulo">Restafy</h1>
       <q-form class="q-gutter-md" @submit.prevent="loginUsuario">
         <q-input
@@ -122,18 +122,25 @@ const onReset = () => {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-image: url("/fondoGym.jpg");
-  background-size: cover;
+  width: 100vw; /* Asegura ancho completo */
+  background-image: url("/fondo_login.png");
+  background-size: cover;         /* Escala para cubrir toda el área */
+  background-repeat: no-repeat;   /* Evita repeticiones */
+  background-position: center;    /* Centra la imagen */
+  background-attachment: fixed;   /* Opcional: evita scroll de fondo */
   color: white;
 }
 
+
 .titulo {
+  text-align: center;
   font-family: "Roboto", sans-serif;
   font-size: 70px;
   font-weight: bold;
 }
 
 .input {
+  justify-items: center;
   background-color: white;
 }
 
@@ -153,5 +160,18 @@ const onReset = () => {
   color: rgb(242, 242, 13);
   text-decoration: underline;
   cursor: pointer;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
 }
 </style>

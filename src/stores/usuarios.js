@@ -183,33 +183,33 @@ export const useUsuarioStore = defineStore("usuario", () => {
         }
     }
 
-    // let forgotPassword = async (email) => {
-    //     loading.value = true;
-    //     try {
-    //         let req = await axios.post(`api/usuarios/forgot-password`, { email });
-    //         console.log(req);
-    //         return req.data;
-    //     } catch (error) {
-    //         console.log(error);
-    //         return error;
-    //     } finally {
-    //         loading.value = false;
-    //     }
-    // }
+    let forgotPassword = async (email) => {
+        loading.value = true;
+        try {
+            let req = await axios.post(`api/usuario/forgot-password`, { email });
+            console.log(req);
+            return req.data;
+        } catch (error) {
+            console.log(error);
+            return error;
+        } finally {
+            loading.value = false;
+        }
+    }
 
-    // let resetPassword = async (token, newPassword, confirmPassword) => {
-    //     loading.value = true;
-    //     try {
-    //         let req = await axios.post(`api/usuarios/reset-password/${token}`, { newPassword, confirmPassword });
-    //         console.log(req);
-    //         return req.data;
-    //     } catch (error) {
-    //         console.log(error);
-    //         return error;
-    //     } finally {
-    //         loading.value = false;
-    //     }
-    // }
+    let resetPassword = async (token, newPassword, confirmPassword) => {
+        loading.value = true;
+        try {
+            let req = await axios.post(`api/usuario/reset-password/${token}`, { newPassword, confirmPassword });
+            console.log(req);
+            return req.data;
+        } catch (error) {
+            console.log(error);
+            return error;
+        } finally {
+            loading.value = false;
+        }
+    }
 
     const clearUsuario = () => {
         usuario.value = null;
@@ -225,12 +225,12 @@ export const useUsuarioStore = defineStore("usuario", () => {
         postUsuario,
         putUsuario,
         toggleEstadoUsuario,
-        token,
-        usuario,
         clearUsuario,
         forgotPassword,
         resetPassword,
-        loading
+        token,
+        usuario,
+        loading,
     }
 },
     {
