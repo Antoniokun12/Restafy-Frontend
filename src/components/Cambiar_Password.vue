@@ -111,7 +111,7 @@ function handleSubmit() {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url("https://t4.ftcdn.net/jpg/06/31/52/63/360_F_631526348_iyXBhrHcirGz44bTZejMB1IVAjmdUp92.jpg");
+  background-image: url("/fondo_cambiopassword.png");
   background-size: cover;
   background-position: center;
   opacity: 0.9;

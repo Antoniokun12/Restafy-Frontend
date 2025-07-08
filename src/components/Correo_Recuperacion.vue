@@ -87,7 +87,7 @@ function mostrarNotificacion(mensaje, color = "negative") {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-image: url("https://e1.pxfuel.com/desktop-wallpaper/391/391/desktop-wallpaper-3840x2160-dumbbells-fitness-gym-u-16-9-weights.jpg");
+  background-image: url("/fondo_enviocorreo.png");
   background-size: cover;
   background-position: center;
   color: white;
