@@ -18,7 +18,6 @@ export const useUsuarioStore = defineStore("usuario", () => {
                     "x-token": token.value,
                 },
             });
-            console.log(res);
             return res.data
 
         } catch (error) {
@@ -109,7 +108,7 @@ export const useUsuarioStore = defineStore("usuario", () => {
     let postUsuario = async (r) => {
         loading.value = true;
         try {
-            let req = await axios.post(`api/usuarios/crear`, r, {
+            let req = await axios.post(`api/usuario/crear`, r, {
                 headers: {
                     "x-token": token.value,
                 },
@@ -235,4 +234,5 @@ export const useUsuarioStore = defineStore("usuario", () => {
 },
     {
         persist: true,
-    })
+    }
+)

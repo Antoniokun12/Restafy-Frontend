@@ -123,6 +123,7 @@ const onReset = () => {
   align-items: center;
   height: 100vh;
   width: 100vw; /* Asegura ancho completo */
+  padding: 20px;
   background-image: url("/fondo_login.png");
   background-size: cover;         /* Escala para cubrir toda el área */
   background-repeat: no-repeat;   /* Evita repeticiones */

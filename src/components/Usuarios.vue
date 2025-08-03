@@ -3,9 +3,19 @@
     <div class="q-pa-md text-center">
       <div class="text-h2">Usuarios</div>
 
-      <q-btn label="Agregar Usuario" color="primary" @click="showForm = true" class="q-my-md" />
+      <q-btn
+        label="Agregar Usuario"
+        color="primary"
+        @click="showForm = true"
+        class="q-my-md"
+      />
 
-      <q-btn-dropdown color="primary" icon="filter_list" label="Filtrar" class="q-ml-sm">
+      <q-btn-dropdown
+        color="primary"
+        icon="filter_list"
+        label="Filtrar"
+        class="q-ml-sm"
+      >
         <q-list>
           <q-item clickable v-ripple @click="listarUsuarios">
             <q-item-section>Listar Todos</q-item-section>
@@ -34,7 +44,14 @@
           >
             <template v-slot:body-cell-opciones="props">
               <q-td :props="props">
-                <q-btn flat dense round icon="edit" color="primary" @click="editarUsuario(props.row)" />
+                <q-btn
+                  flat
+                  dense
+                  round
+                  icon="edit"
+                  color="primary"
+                  @click="editarUsuario(props.row)"
+                />
                 <q-btn
                   flat
                   dense
@@ -76,7 +93,12 @@
             <div class="text-h5 text-center q-mb-md">Formulario de Usuario</div>
 
             <q-input v-model="nombre" label="Nombre" required />
-            <q-input v-model="email" label="Correo electrónico" type="email" required />
+            <q-input
+              v-model="email"
+              label="Correo electrónico"
+              type="email"
+              required
+            />
             <q-input
               v-if="!isEditing"
               v-model="password"
@@ -95,20 +117,29 @@
             <q-select v-model="rol" label="Rol" :options="roles" required />
 
             <div class="q-mt-md text-center">
-              <q-btn flat color="negative" label="Cancelar" @click="cancelar" class="q-mr-sm" />
+              <q-btn
+                flat
+                color="negative"
+                label="Cancelar"
+                @click="cancelar"
+                class="q-mr-sm"
+              />
               <q-btn type="submit" color="primary" label="Guardar" />
             </div>
           </q-form>
         </q-card-section>
       </q-card>
     </q-dialog>
+    <div v-if="useUsuarios.loading" class="overlay">
+      <q-spinner size="xl" color="primary" />
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useQuasar } from 'quasar';
-import { useUsuarioStore } from '../stores/usuarios';
+import { ref } from "vue";
+import { useQuasar } from "quasar";
+import { useUsuarioStore } from "../stores/usuarios";
 
 const $q = useQuasar();
 const useUsuarios = useUsuarioStore();
@@ -117,20 +148,20 @@ const showForm = ref(false);
 const isEditing = ref(false);
 const showPassword = ref(false);
 
-const nombre = ref('');
-const email = ref('');
-const password = ref('');
-const rol = ref('');
+const nombre = ref("");
+const email = ref("");
+const password = ref("");
+const rol = ref("");
 const usuarioId = ref(null);
 
-const roles = ['Administrador', 'Mesero', 'Cocinero', 'Cajero', 'Contador'];
+const roles = ["Administrador", "Mesero", "Cocinero", "Cajero", "Contador"];
 
 const columns = [
-  { name: 'nombre', label: 'Nombre', align: 'center', field: 'nombre' },
-  { name: 'email', label: 'Email', align: 'center', field: 'email' },
-  { name: 'rol', label: 'Rol', align: 'center', field: 'rol' },
-  { name: 'estado', label: 'Estado', align: 'center', field: 'estado' },
-  { name: 'opciones', label: 'Opciones', align: 'center' }
+  { name: "nombre", label: "Nombre", align: "center", field: "nombre" },
+  { name: "email", label: "Email", align: "center", field: "email" },
+  { name: "rol", label: "Rol", align: "center", field: "rol" },
+  { name: "estado", label: "Estado", align: "center", field: "estado" },
+  { name: "opciones", label: "Opciones", align: "center" },
 ];
 
 const rows = ref([]);
@@ -142,17 +173,25 @@ const listarUsuarios = async () => {
 
 const listarUsuariosActivos = async () => {
   const res = await useUsuarios.getUsuariosActivos();
-  rows.value = res.usuarios;
+  rows.value = res.activados;
 };
 
 const listarUsuariosInactivos = async () => {
   const res = await useUsuarios.getUsuariosInactivos();
-  rows.value = res.usuarios;
+  rows.value = res.desactivados;
 };
 
 const agregarOEditarUsuario = async () => {
-  if (!nombre.value || !email.value || (!isEditing.value && !password.value) || !rol.value) {
-    $q.notify({ type: 'negative', message: 'Completa todos los campos requeridos' });
+  if (
+    !nombre.value ||
+    !email.value ||
+    (!isEditing.value && !password.value) ||
+    !rol.value
+  ) {
+    $q.notify({
+      type: "negative",
+      message: "Completa todos los campos requeridos",
+    });
     return;
   }
 
@@ -162,15 +201,15 @@ const agregarOEditarUsuario = async () => {
   try {
     if (usuarioId.value) {
       await useUsuarios.putUsuario(usuarioId.value, data);
-      $q.notify({ type: 'positive', message: 'Usuario actualizado' });
+      // $q.notify({ type: 'positive', message: 'Usuario actualizado' });
     } else {
       await useUsuarios.postUsuario(data);
-      $q.notify({ type: 'positive', message: 'Usuario creado' });
+      // $q.notify({ type: 'positive', message: 'Usuario creado' });
     }
     listarUsuarios();
     resetForm();
   } catch (err) {
-    $q.notify({ type: 'negative', message: 'Error al guardar usuario' });
+    $q.notify({ type: "negative", message: "Error al guardar usuario" });
   }
 };
 
@@ -194,15 +233,16 @@ const desactivarUsuario = async (usuario) => {
 };
 
 const cancelar = () => resetForm();
-const togglePasswordVisibility = () => (showPassword.value = !showPassword.value);
+const togglePasswordVisibility = () =>
+  (showPassword.value = !showPassword.value);
 
 const resetForm = () => {
   showForm.value = false;
   isEditing.value = false;
-  nombre.value = '';
-  email.value = '';
-  password.value = '';
-  rol.value = '';
+  nombre.value = "";
+  email.value = "";
+  password.value = "";
+  rol.value = "";
   usuarioId.value = null;
 };
 
@@ -218,5 +258,17 @@ listarUsuarios();
 }
 .q-btn {
   margin-right: 5px;
+}
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
 }
 </style>
