@@ -1,4 +1,3 @@
-// src/stores/empleados.js
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { ref } from 'vue'

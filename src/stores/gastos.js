@@ -69,7 +69,7 @@ export const useGastoStore = defineStore('gasto', () => {
             await axios.delete(`api/gasto/eliminar/${id}`, {
                 headers: { 'x-token': useUsuario.token }
             })
-            Notify.create({ type: 'positive', message: 'Gasto eliminado' })
+            // Notify.create({ type: 'positive', message: 'Gasto eliminado' })
             return { success: true }
         } catch (err) {
             Notify.create({ type: 'negative', message: 'Error al eliminar gasto' })
