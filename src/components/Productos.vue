@@ -179,7 +179,7 @@
 import { ref, watch } from "vue";
 import { useQuasar } from "quasar";
 import { useProductoStore } from "../stores/productos";
-import axios from 'axios';
+import axios from "axios";
 
 const $q = useQuasar();
 const store = useProductoStore();

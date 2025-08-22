@@ -12,6 +12,10 @@ import Gastos from "../components/Gastos.vue";
 import Balance_Mesual from "../components/Balance_Mensual.vue";
 import Inventario from "../components/Inventario.vue";
 import Usuarios from "../components/Usuarios.vue";
+import Menu_Mesero from "../components/MenuMesero.vue";
+import Menu_Online from "../components/MenuOnline.vue";
+import Pedidos_Cocina from "../components/Pedidos_Cocina.vue";
+import Pedidos_Caja from "../components/Pedidos_Caja.vue";
 import Correo_Recuperacion from "../components/Correo_Recuperacion.vue";
 import Cambiar_Password from "../components/Cambiar_Password.vue";
 import { useUsuarioStore } from '../stores/usuarios';
@@ -55,6 +59,26 @@ const routes = [
     name: 'Cambiar_Password',
     component: Cambiar_Password,
     props: route => ({ token: route.query.token })
+  },
+  {
+    path: '/menu_mesero',
+    name: 'Menu_Mesero',
+    component: Menu_Mesero,
+  },
+  {
+    path: '/menu_online',
+    name: 'Menu_Online',
+    component: Menu_Online,
+  },
+  {
+    path: '/pedidos_cocina',
+    name: 'Pedidos_Cocina',
+    component: Pedidos_Cocina,
+  },
+  {
+    path: '/Pedidos_caja',
+    name: 'Pedidos_Caja',
+    component: Pedidos_Caja,
   },
   {
     path: '/home',
