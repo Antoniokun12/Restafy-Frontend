@@ -246,7 +246,7 @@ const agregarOEditarProducto = async () => {
     formData.append("foto", archivo.value);
     try {
       const res = await axios.post(
-        "http://localhost:4500/api/upload/imagen",
+        "https://restafy-backend.onrender.com/api/upload/imagen",
         formData,
         {
           headers: {
