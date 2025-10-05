@@ -13,8 +13,8 @@ import '@quasar/extras/material-icons/material-icons.css'
 // Import Quasar css
 import 'quasar/src/css/index.sass'
 
-// axios.defaults.baseURL = "https://restafy-backend.onrender.com/";
-axios.defaults.baseURL = "http://localhost:4500/";
+axios.defaults.baseURL = "https://restafy-backend.onrender.com/";
+// axios.defaults.baseURL = "http://localhost:4500/";
 
 const pinia = (createPinia())
 pinia.use(piniaPluginPersistedstate)
