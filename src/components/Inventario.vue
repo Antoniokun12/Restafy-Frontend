@@ -40,6 +40,8 @@
             flat
             bordered
             square
+            dense
+            :rows-per-page-options="[0]"
             no-data-label="No hay inventario registrado"
           >
             <template v-slot:body-cell-opciones="props">
@@ -87,7 +89,7 @@
 
     <!-- Formulario -->
     <q-dialog v-model="showForm">
-      <q-card style="min-width: 400px">
+      <q-card>
         <q-card-section>
           <q-form @submit.prevent="agregarOEditarInventario">
             <div class="text-h5 text-center q-mb-md">
@@ -95,7 +97,20 @@
             </div>
 
             <q-input v-model="nombre" label="Nombre" required />
-            <q-input v-model="unidad" label="Unidad" required />
+            <q-select
+              v-model="unidad"
+              label="Unidad"
+              :options="[
+                { label: 'Unidades', value: 'unidades' },
+                { label: 'Kilogramos', value: 'kg' },
+                { label: 'Litros', value: 'litros' },
+              ]"
+              emit-value
+              map-options
+              dense
+              filled
+              required
+            />
             <q-input
               v-model.number="cantidad"
               label="Cantidad"

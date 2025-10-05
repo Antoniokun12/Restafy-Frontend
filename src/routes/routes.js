@@ -64,6 +64,8 @@ const routes = [
     path: '/menu_mesero',
     name: 'Menu_Mesero',
     component: Menu_Mesero,
+    beforeEnter: auth,
+    meta: { rol: ['Administrador', 'Mesero'] }
   },
   {
     path: '/menu_online',
@@ -74,11 +76,15 @@ const routes = [
     path: '/pedidos_cocina',
     name: 'Pedidos_Cocina',
     component: Pedidos_Cocina,
+    beforeEnter: auth,
+    meta: { rol: ['Administrador', 'Mesero', 'Cocinero'] }
   },
   {
     path: '/Pedidos_caja',
     name: 'Pedidos_Caja',
     component: Pedidos_Caja,
+    beforeEnter: auth,
+    meta: { rol: ['Administrador', 'Cajero'] }
   },
   {
     path: '/home',
@@ -98,7 +104,7 @@ const routes = [
         name: 'Productos',
         component: Productos,
         beforeEnter: auth,
-        meta: { rol: ['Administrador'] }
+        meta: { rol: ['Administrador', 'Cocinero'] }
       },
       {
         path: '/pedidos',
@@ -112,7 +118,7 @@ const routes = [
         name: 'Ventas',
         component: Ventas,
         beforeEnter: auth,
-        meta: { rol: ['Administrador', 'Cajero', 'Contador'] }
+        meta: { rol: ['Administrador', 'Cajero'] }
       },
       {
         path: '/facturas',
@@ -140,14 +146,14 @@ const routes = [
         name: 'Gastos',
         component: Gastos,
         beforeEnter: auth,
-        meta: { rol: ['Administrador', 'Contador'] }
+        meta: { rol: ['Administrador', 'Contador', 'Cajero'] }
       },
       {
         path: '/balance_mensual',
         name: 'Balance_Mensual',
         component: Balance_Mesual,
         beforeEnter: auth,
-        meta: { rol: ['Administrador', 'Contador'] }
+        meta: { rol: ['Administrador', 'Contador', 'Cajero'] }
       },
       {
         path: '/inventario',

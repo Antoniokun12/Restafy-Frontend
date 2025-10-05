@@ -1,6 +1,110 @@
-body, html {
+body,
+html {
   margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
+}
+
+.q-table thead th {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.q-table tbody td {
+  font-size: 16px !important;
+  font-weight: 500;
+  color: #212121;
+  padding: 10px 12px;
+}
+
+/* Base: evita anchos fijos y centra */
+.q-dialog .q-card {
+  width: 100%;
+  max-width: 500px;
+  /* ← ahora el tope es 500 */
+  margin: 0 auto;
+  border-radius: 14px;
+}
+
+/* Reduce padding dentro del overlay del dialog cuando está en modo reducido */
+.q-dialog__inner--minimized {
+  padding: 16px !important;
+}
+
+/* ===== Breakpoint: ≤ 600px (teléfonos comunes) ===== */
+@media (max-width: 600px) {
+
+  /* La tarjeta ocupa casi todo el ancho */
+  .q-dialog .q-card {
+    max-width: 94vw;
+    /* usa % de pantalla en móvil */
+    border-radius: 12px;
+  }
+
+  /* Menos padding dentro de las secciones */
+  .q-dialog .q-card__section {
+    padding: 12px 14px;
+  }
+
+  /* Campos un poco más compactos */
+  .q-dialog .q-field {
+    font-size: 14px;
+  }
+
+  .q-dialog .q-field__label {
+    font-size: 12px;
+  }
+
+  .q-dialog .q-field__native,
+  .q-dialog .q-textarea .q-field__native {
+    line-height: 1.25;
+  }
+
+  /* Botones cómodos pero no gigantes */
+  .q-dialog .q-btn {
+    min-height: 36px;
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+
+  /* Área de subida de imagen */
+  .q-dialog .image-uploader {
+    border: 1px dashed rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+  }
+
+  .q-dialog .image-uploader .preview-img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+
+  .q-dialog .image-uploader .placeholder {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .q-dialog .image-uploader .row.q-gutter-sm {
+    flex-wrap: wrap;
+  }
+}
+
+/* ===== Breakpoint: ≤ 360px (pantallas muy pequeñas) ===== */
+@media (max-width: 360px) {
+  .q-dialog .q-card {
+    max-width: 96vw;
+    border-radius: 10px;
+  }
+
+  .q-dialog .q-card__section {
+    padding: 10px 12px;
+  }
+
+  .q-dialog .q-btn {
+    min-height: 34px;
+    font-size: 13px;
+    padding: 6px 10px;
+  }
 }

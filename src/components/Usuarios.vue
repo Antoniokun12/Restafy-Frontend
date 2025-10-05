@@ -40,6 +40,8 @@
             flat
             bordered
             square
+            dense
+            :rows-per-page-options="[0]"
             no-data-label="No hay usuarios"
           >
             <template v-slot:body-cell-opciones="props">
@@ -52,6 +54,7 @@
                   color="primary"
                   @click="editarUsuario(props.row)"
                 />
+
                 <q-btn
                   flat
                   dense
@@ -61,15 +64,21 @@
                   v-if="props.row.estado === 0"
                   @click="activarUsuario(props.row)"
                 />
+
                 <q-btn
                   flat
                   dense
                   round
                   icon="toggle_off"
-                  color="red"
+                  :color="props.row._id === authUserId ? 'grey-6' : 'red'"
+                  :disable="props.row._id === authUserId"
                   v-if="props.row.estado === 1"
                   @click="desactivarUsuario(props.row)"
-                />
+                >
+                  <q-tooltip v-if="props.row._id === authUserId">
+                    No puedes desactivar tu propia cuenta
+                  </q-tooltip>
+                </q-btn>
               </q-td>
             </template>
 
@@ -87,23 +96,29 @@
 
     <!-- Dialogo de Formulario -->
     <q-dialog v-model="showForm">
-      <q-card style="min-width: 400px">
+      <q-card>
         <q-card-section>
-          <q-form @submit.prevent="agregarOEditarUsuario">
+          <!-- NUEVO: ref="formRef" para poder validar -->
+          <q-form ref="formRef" @submit.prevent="agregarOEditarUsuario">
             <div class="text-h5 text-center q-mb-md">Formulario de Usuario</div>
 
             <q-input v-model="nombre" label="Nombre" required />
+
             <q-input
               v-model="email"
               label="Correo electrónico"
               type="email"
               required
             />
+
             <q-input
               v-if="!isEditing"
               v-model="password"
               label="Contraseña"
               :type="showPassword ? 'text' : 'password'"
+              :rules="passwordRules"
+              lazy-rules
+              hide-bottom-space
               required
             >
               <template v-slot:append>
@@ -114,6 +129,7 @@
                 />
               </template>
             </q-input>
+
             <q-select v-model="rol" label="Rol" :options="roles" required />
 
             <div class="q-mt-md text-center">
@@ -130,6 +146,7 @@
         </q-card-section>
       </q-card>
     </q-dialog>
+
     <div v-if="useUsuarios.loading" class="overlay">
       <q-spinner size="xl" color="primary" />
     </div>
@@ -137,7 +154,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useQuasar } from "quasar";
 import { useUsuarioStore } from "../stores/usuarios";
 
@@ -147,6 +164,8 @@ const useUsuarios = useUsuarioStore();
 const showForm = ref(false);
 const isEditing = ref(false);
 const showPassword = ref(false);
+
+const formRef = ref(null); // NUEVO: ref del formulario
 
 const nombre = ref("");
 const email = ref("");
@@ -166,6 +185,14 @@ const columns = [
 
 const rows = ref([]);
 
+// NUEVO: reglas para password cuando se crea (no en edición)
+const passwordRules = [
+  (val) => !!val || "La contraseña es obligatoria",
+  (val) =>
+    (val && val.length >= 6) ||
+    "La contraseña debe tener al menos 6 caracteres",
+];
+
 const listarUsuarios = async () => {
   const res = await useUsuarios.getUsuarios();
   rows.value = res.usuarios;
@@ -182,29 +209,25 @@ const listarUsuariosInactivos = async () => {
 };
 
 const agregarOEditarUsuario = async () => {
-  if (
-    !nombre.value ||
-    !email.value ||
-    (!isEditing.value && !password.value) ||
-    !rol.value
-  ) {
+  // Valida campos vía rules (solo valida los visibles; password se valida solo al crear)
+  const ok = await formRef.value?.validate?.();
+  if (!ok) {
     $q.notify({
-      type: "negative",
-      message: "Completa todos los campos requeridos",
+      type: "warning",
+      message: "Revisa los campos del formulario.",
     });
     return;
   }
 
+  // Guardas datos
   const data = { nombre: nombre.value, email: email.value, rol: rol.value };
   if (!isEditing.value) data.password = password.value;
 
   try {
     if (usuarioId.value) {
       await useUsuarios.putUsuario(usuarioId.value, data);
-      // $q.notify({ type: 'positive', message: 'Usuario actualizado' });
     } else {
       await useUsuarios.postUsuario(data);
-      // $q.notify({ type: 'positive', message: 'Usuario creado' });
     }
     listarUsuarios();
     resetForm();
@@ -227,9 +250,29 @@ const activarUsuario = async (usuario) => {
   listarUsuarios();
 };
 
+// id del usuario autenticado para protección
+const authUserId = computed(
+  () => useUsuarios.usuario?._id || useUsuarios.uid || null
+);
+
 const desactivarUsuario = async (usuario) => {
-  await useUsuarios.toggleEstadoUsuario(usuario._id, false);
-  listarUsuarios();
+  if (usuario._id === authUserId.value) {
+    $q.notify({
+      type: "warning",
+      message: "No puedes desactivarte a ti mismo.",
+    });
+    return;
+  }
+
+  $q.dialog({
+    title: "Confirmar",
+    message: `¿Desactivar al usuario "${usuario.nombre}"?`,
+    cancel: true,
+    persistent: true,
+  }).onOk(async () => {
+    await useUsuarios.toggleEstadoUsuario(usuario._id, false);
+    listarUsuarios();
+  });
 };
 
 const cancelar = () => resetForm();

@@ -1,8 +1,15 @@
 <template>
   <q-layout view="hHh LpR fFf">
-    <q-header elevated class="bg-grey-9 text-white" height-hint="98">
+    <q-header elevated class="bg-grey-9 text-white">
       <q-toolbar>
-        <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
+        <q-btn
+          dense
+          flat
+          round
+          icon="menu"
+          @click="toggleLeftDrawer"
+          size="30px"
+        />
 
         <q-toolbar-title
           :style="{
@@ -12,10 +19,9 @@
             alignItems: 'center',
           }"
         >
-          <q-avatar size="100px" :style="{ marginRight: '20px' }">
-          <img src="/icono_home.png" />
+          <q-avatar size="80px" :style="{ marginRight: '20px' }">
+            <img src="/icono_home.png" />
           </q-avatar>
-        
         </q-toolbar-title>
 
         <q-btn
@@ -23,28 +29,26 @@
           flat
           round
           icon="person"
-          size="lg"
+          size="30px"
           @click="toggleRightDrawer"
         />
       </q-toolbar>
 
       <q-tabs align="left">
         <q-route-tab to="/home" label="Inicio" />
-        <!-- <q-route-tab to="/page2" label="Page Two" />
-        <q-route-tab to="/page3" label="Page Three" /> -->
       </q-tabs>
     </q-header>
 
     <q-drawer v-model="leftDrawerOpen" side="left" overlay elevated>
       <router-link
-    
+        v-if="puedeVer('productos')"
         to="/productos"
         class="drawer-link"
         active-class="drawer-link-active"
       >
-        <q-item clickable v-ripple>
-          <q-item-section>
-            <q-icon name="person" size="36px" />
+        <q-item clickable v-ripple dense>
+          <q-item-section avatar>
+            <q-icon name="fastfood" size="50px" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Productos</q-item-label>
@@ -53,30 +57,78 @@
       </router-link>
 
       <router-link
-        
-        to="/pedidos"
+        v-if="puedeVer('menu_mesero')"
+        to="/menu_mesero"
         class="drawer-link"
         active-class="drawer-link-active"
       >
-        <q-item clickable v-ripple>
-          <q-item-section>
-            <q-icon name="people" size="36px" />
+        <q-item clickable v-ripple dense>
+          <q-item-section avatar>
+            <q-icon name="restaurant_menu" size="50px" />
           </q-item-section>
           <q-item-section>
-            <q-item-label>Pedidos</q-item-label>
+            <q-item-label>Menu Mesa</q-item-label>
           </q-item-section>
         </q-item>
       </router-link>
 
       <router-link
-        
+        v-if="puedeVer('menu_online')"
+        to="/menu_online"
+        class="drawer-link"
+        active-class="drawer-link-active"
+      >
+        <q-item clickable v-ripple dense>
+          <q-item-section avatar>
+            <q-icon name="delivery_dining" size="50px" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Menu Envios</q-item-label>
+          </q-item-section>
+        </q-item>
+      </router-link>
+
+      <router-link
+        v-if="puedeVer('pedidos_cocina')"
+        to="/pedidos_cocina"
+        class="drawer-link"
+        active-class="drawer-link-active"
+      >
+        <q-item clickable v-ripple dense>
+          <q-item-section avatar>
+            <q-icon name="soup_kitchen" size="50px" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Pedidos Cocina</q-item-label>
+          </q-item-section>
+        </q-item>
+      </router-link>
+
+      <router-link
+        v-if="puedeVer('Pedidos_caja')"
+        to="/Pedidos_caja"
+        class="drawer-link"
+        active-class="drawer-link-active"
+      >
+        <q-item clickable v-ripple dense>
+          <q-item-section avatar>
+            <q-icon name="point_of_sale" size="50px" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Pedidos Caja</q-item-label>
+          </q-item-section>
+        </q-item>
+      </router-link>
+
+      <router-link
+        v-if="puedeVer('ventas')"
         to="/ventas"
         class="drawer-link"
         active-class="drawer-link-active"
       >
-        <q-item clickable v-ripple>
-          <q-item-section>
-            <q-icon name="location_city" size="36px" />
+        <q-item clickable v-ripple dense>
+          <q-item-section avatar>
+            <q-icon name="trending_up" size="50px" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Ventas</q-item-label>
@@ -85,14 +137,14 @@
       </router-link>
 
       <router-link
-        
+        v-if="puedeVer('facturas')"
         to="/facturas"
         class="drawer-link"
         active-class="drawer-link-active"
       >
-        <q-item clickable v-ripple>
-          <q-item-section>
-            <q-icon name="exit_to_app" size="36px" />
+        <q-item clickable v-ripple dense>
+          <q-item-section avatar>
+            <q-icon name="receipt_long" size="50px" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Facturas</q-item-label>
@@ -101,14 +153,14 @@
       </router-link>
 
       <router-link
-       
+        v-if="puedeVer('empleados')"
         to="/empleados"
         class="drawer-link"
         active-class="drawer-link-active"
       >
-        <q-item clickable v-ripple>
-          <q-item-section>
-            <q-icon name="assignment" size="36px" />
+        <q-item clickable v-ripple dense>
+          <q-item-section avatar>
+            <q-icon name="group" size="50px" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Empleados</q-item-label>
@@ -117,14 +169,14 @@
       </router-link>
 
       <router-link
-        
+        v-if="puedeVer('nomina')"
         to="/nomina"
         class="drawer-link"
         active-class="drawer-link-active"
       >
-        <q-item clickable v-ripple>
-          <q-item-section>
-            <q-icon name="payment" size="36px" />
+        <q-item clickable v-ripple dense>
+          <q-item-section avatar>
+            <q-icon name="request_quote" size="50px" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Nomina</q-item-label>
@@ -133,14 +185,14 @@
       </router-link>
 
       <router-link
-      
+        v-if="puedeVer('gastos')"
         to="/gastos"
         class="drawer-link"
         active-class="drawer-link-active"
       >
-        <q-item clickable v-ripple>
-          <q-item-section>
-            <q-icon name="store" size="36px" />
+        <q-item clickable v-ripple dense>
+          <q-item-section avatar>
+            <q-icon name="money_off" size="50px" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Gastos</q-item-label>
@@ -149,30 +201,30 @@
       </router-link>
 
       <router-link
-       
+        v-if="puedeVer('balance_mensual')"
         to="/balance_mensual"
         class="drawer-link"
         active-class="drawer-link-active"
       >
-        <q-item clickable v-ripple>
-          <q-item-section>
-            <q-icon name="local_mall" size="36px" />
+        <q-item clickable v-ripple dense>
+          <q-item-section avatar>
+            <q-icon name="analytics" size="50px" />
           </q-item-section>
           <q-item-section>
-            <q-item-label>Balance Mensual</q-item-label>
+            <q-item-label>Balance Y Arqueo</q-item-label>
           </q-item-section>
         </q-item>
       </router-link>
 
       <router-link
-        
+        v-if="puedeVer('inventario')"
         to="/inventario"
         class="drawer-link"
         active-class="drawer-link-active"
       >
-        <q-item clickable v-ripple>
-          <q-item-section>
-            <q-icon name="fitness_center" size="36px" />
+        <q-item clickable v-ripple dense>
+          <q-item-section avatar>
+            <q-icon name="inventory_2" size="50px" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Inventario</q-item-label>
@@ -181,14 +233,14 @@
       </router-link>
 
       <router-link
-      
+        v-if="puedeVer('usuarios')"
         to="/usuarios"
         class="drawer-link"
         active-class="drawer-link-active"
       >
-        <q-item clickable v-ripple>
-          <q-item-section>
-            <q-icon name="build" size="36px" />
+        <q-item clickable v-ripple dense>
+          <q-item-section avatar>
+            <q-icon name="manage_accounts" size="50px" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Usuarios</q-item-label>
@@ -197,7 +249,6 @@
       </router-link>
 
       <br />
-      <!-- drawer content -->
     </q-drawer>
 
     <q-drawer v-model="rightDrawerOpen" side="right" overlay elevated>
@@ -248,15 +299,19 @@
     </q-page-container>
 
     <q-footer elevated class="bg-grey-10 text-white">
-      <q-toolbar>
+      <q-toolbar class="justify-between">
         <q-toolbar-title>
           <div class="footer-content q-pa-md">
-            <p class="q-mb-none">
-              Reservado los derechos de autor ley 1987("antonio y el viejo
-              chucho")
+            <p class="q-mb-none text-subtitle2">
+              © {{ new Date().getFullYear() }} Restafy — Sistema de Gestión para
+              Restaurantes
             </p>
           </div>
         </q-toolbar-title>
+        <div class="q-pr-md">
+          <q-icon name="restaurant_menu" size="20px" class="q-mr-sm" />
+          <span class="text-caption">Powered by Antonio & Esneyder</span>
+        </div>
       </q-toolbar>
     </q-footer>
   </q-layout>
@@ -272,8 +327,34 @@ const router = useRouter();
 
 const usuario = computed(() => usuarioStore.usuario);
 
-const canAccess = (roles) => {
-  return roles.includes(usuario.value.rol);
+// --- Permisos por rol ---
+const permisos = {
+  Administrador: [
+    "productos",
+    "menu_mesero",
+    "menu_online",
+    "pedidos_cocina",
+    "Pedidos_caja",
+    "ventas",
+    "facturas",
+    "empleados",
+    "nomina",
+    "gastos",
+    "balance_mensual",
+    "inventario",
+    "usuarios",
+  ],
+  Mesero: ["menu_mesero", "menu_online", "pedidos_cocina"],
+  Cocinero: ["pedidos_cocina", "productos", "inventario"],
+  Cajero: ["facturas", "ventas", "Pedidos_caja", "gastos", "balance_mensual", "menu_online",],
+  Contador: ["balance_mensual", "nomina", "empleados", "facturas", "gastos"],
+};
+
+const puedeVer = (rutaKey) => {
+  const rolActual = usuario.value?.rol;
+  if (!rolActual) return false;
+  if (rolActual === "Administrador") return true; // por si olvidas añadir alguna ruta nueva
+  return permisos[rolActual]?.includes(rutaKey) || false;
 };
 
 onMounted(() => {
@@ -341,6 +422,14 @@ const cerrarSesion = () => {
   width: 100%;
   display: flex;
   justify-content: flex-end;
+}
+
+.drawer-link .q-item__section--avatar {
+  min-width: 50px; /* reduce el ancho reservado al icono */
+}
+
+.drawer-link .q-icon {
+  margin-right: 25px; /* menos espacio entre icono y texto */
 }
 </style>
 

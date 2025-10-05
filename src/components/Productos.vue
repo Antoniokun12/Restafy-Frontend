@@ -40,6 +40,8 @@
             flat
             bordered
             square
+            dense
+            :rows-per-page-options="[0]"
             no-data-label="No hay productos"
           >
             <template v-slot:body-cell-opciones="props">
@@ -79,7 +81,7 @@
 
     <!-- Dialogo Formulario -->
     <q-dialog v-model="showForm">
-      <q-card style="min-width: 450px">
+      <q-card>
         <q-card-section>
           <q-form @submit.prevent="agregarOEditarProducto">
             <div class="text-h5 text-center q-mb-md">Producto</div>
@@ -201,7 +203,18 @@ const archivo = ref(null);
 
 const columns = [
   { name: "nombre", label: "Nombre", align: "center", field: "nombre" },
-  { name: "precio", label: "Precio", align: "center", field: "precio" },
+  {
+    name: "precio",
+    label: "Precio",
+    align: "center",
+    field: "precio",
+    format: (val) =>
+      new Intl.NumberFormat("es-CO", {
+        style: "currency",
+        currency: "COP",
+        minimumFractionDigits: 0,
+      }).format(val),
+  },
   { name: "tipo", label: "Tipo", align: "center", field: "tipo" },
   {
     name: "componentes",
@@ -251,7 +264,7 @@ const agregarOEditarProducto = async () => {
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            "x-token": store.token, // o useUsuarioStore().token si lo usas así
+            "x-token": store.token,
           },
         }
       );

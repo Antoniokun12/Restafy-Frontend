@@ -1,40 +1,42 @@
 <template>
   <div class="login-container">
-    <div class="q-pa-md" style="min-width: 300px">
-      <h1 class="titulo">Restafy</h1>
-      <q-form class="q-gutter-md" @submit.prevent="loginUsuario">
-        <q-input
-          filled
-          class="input"
-          v-model="email"
-          label="Ingrese su correo electrónico *"
-        />
-        <q-input
-          filled
-          class="input"
-          :type="isPwd ? 'password' : 'text'"
-          v-model="password"
-          label="Ingrese su contraseña"
-          ><template v-slot:append>
-            <q-icon
-              :name="isPwd ? 'visibility_off' : 'visibility'"
-              class="cursor-pointer"
-              @click="isPwd = !isPwd"
-            />
-          </template>
-        </q-input>
-        <div class="button-container">
-          <q-btn label="Iniciar sesión" type="submit" color="primary" />
-        </div>
-        <div class="forgot-password-container">
-          <router-link to="/forgot-password"
-            >¿Olvidaste tu contraseña?</router-link
-          >
-        </div>
-      </q-form>
-    </div>
-    <div v-if="useUsuarios.loading" class="overlay">
-      <q-spinner size="xl" color="primary" />
+    <div class="login-card">
+      <div class="q-pa-md" >
+        <h1 class="titulo">Restafy</h1>
+        <q-form class="q-gutter-md" @submit.prevent="loginUsuario">
+          <q-input
+            filled
+            class="input"
+            v-model="email"
+            label="Ingrese su correo electrónico *"
+          />
+          <q-input
+            filled
+            class="input"
+            :type="isPwd ? 'password' : 'text'"
+            v-model="password"
+            label="Ingrese su contraseña"
+            ><template v-slot:append>
+              <q-icon
+                :name="isPwd ? 'visibility_off' : 'visibility'"
+                class="cursor-pointer"
+                @click="isPwd = !isPwd"
+              />
+            </template>
+          </q-input>
+          <div class="button-container">
+            <q-btn label="Iniciar sesión" type="submit" color="primary" />
+          </div>
+          <div class="forgot-password-container">
+            <router-link to="/forgot-password"
+              >¿Olvidaste tu contraseña?</router-link
+            >
+          </div>
+        </q-form>
+      </div>
+      <div v-if="useUsuarios.loading" class="overlay">
+        <q-spinner size="xl" color="primary" />
+      </div>
     </div>
   </div>
 </template>
@@ -125,13 +127,24 @@ const onReset = () => {
   width: 100vw; /* Asegura ancho completo */
   padding: 20px;
   background-image: url("/fondo_login.png");
-  background-size: cover;         /* Escala para cubrir toda el área */
-  background-repeat: no-repeat;   /* Evita repeticiones */
-  background-position: center;    /* Centra la imagen */
-  background-attachment: fixed;   /* Opcional: evita scroll de fondo */
+  background-size: cover; /* Escala para cubrir toda el área */
+  background-repeat: no-repeat; /* Evita repeticiones */
+  background-position: center; /* Centra la imagen */
+  background-attachment: fixed; /* Opcional: evita scroll de fondo */
   color: white;
 }
 
+.login-card {
+  width: 100%;
+  max-width: 480px;
+  background: rgba(216, 225, 225, 0.056);   /* transparente */
+  color: #fff;                          /* texto claro */
+  border-radius: 18px;
+  padding: 24px 22px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.25);
+  backdrop-filter: blur(2px);          /* blur */
+  border: 1px solid rgba(255,255,255,0.25);
+}
 
 .titulo {
   text-align: center;

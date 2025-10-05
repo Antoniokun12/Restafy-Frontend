@@ -40,6 +40,8 @@
             flat
             bordered
             square
+            dense
+            :rows-per-page-options="[0]"
             no-data-label="No hay empleados"
           >
             <template v-slot:body-cell-opciones="props">
@@ -86,7 +88,7 @@
     </div>
 
     <q-dialog v-model="showForm">
-      <q-card style="min-width: 400px">
+      <q-card>
         <q-card-section>
           <q-form @submit.prevent="agregarOEditarEmpleado">
             <div class="text-h5 text-center q-mb-md">
@@ -166,7 +168,18 @@ const columns = [
   { name: "correo", label: "Correo", align: "center", field: "correo" },
   { name: "telefono", label: "Teléfono", align: "center", field: "telefono" },
   { name: "cargo", label: "Cargo", align: "center", field: "cargo" },
-  { name: "salario", label: "Salario", align: "center", field: "salario" },
+  {
+    name: "salario",
+    label: "Salario",
+    align: "center",
+    field: "salario",
+    format: (val) =>
+      new Intl.NumberFormat("es-CO", {
+        style: "currency",
+        currency: "COP",
+        minimumFractionDigits: 0,
+      }).format(val),
+  },
   { name: "estado", label: "Estado", align: "center", field: "estado" },
   { name: "opciones", label: "Opciones", align: "center" },
 ];

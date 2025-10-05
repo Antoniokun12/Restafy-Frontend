@@ -8,19 +8,19 @@
 </script>
 
 <style scoped>
-/* estilos del fondo principal del home */
+
 
 .gym-page {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 200vh;
-  width: 100vw; /* Asegura ancho completo */
+  width: 100vw; 
   background-image: url("/fondo_inicio.png");
-  background-size: cover;         /* Escala para cubrir toda el área */
-  background-repeat: no-repeat;   /* Evita repeticiones */
-  background-position: center;    /* Centra la imagen */
-  background-attachment: fixed;   /* Opcional: evita scroll de fondo */
+  background-size: cover;        
+  background-repeat: no-repeat;  
+  background-position: center;  
+  background-attachment: fixed;  
   color: white;
 }
 

@@ -22,6 +22,8 @@
             flat
             bordered
             square
+            dense
+            :rows-per-page-options="[0]"
             no-data-label="No hay gastos registrados"
           >
             <template v-slot:body-cell-opciones="props">
@@ -51,7 +53,7 @@
 
     <!-- Formulario -->
     <q-dialog v-model="showForm">
-      <q-card style="min-width: 400px">
+      <q-card>
         <q-card-section>
           <q-form @submit.prevent="agregarOEditarGasto">
             <div class="text-h5 text-center q-mb-md">Formulario de Gasto</div>
@@ -130,7 +132,18 @@ const columns = [
     align: "center",
     field: "descripcion",
   },
-  { name: "monto", label: "Monto", align: "center", field: "monto" },
+  {
+    name: "monto",
+    label: "Monto",
+    align: "center",
+    field: "monto",
+    format: (val) =>
+      new Intl.NumberFormat("es-CO", {
+        style: "currency",
+        currency: "COP",
+        minimumFractionDigits: 0, 
+      }).format(val),
+  },
   { name: "metodoPago", label: "Método", align: "center", field: "metodoPago" },
   {
     name: "usuario",

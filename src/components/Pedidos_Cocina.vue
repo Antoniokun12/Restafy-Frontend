@@ -2,37 +2,30 @@
   <q-layout view="hHh Lpr fFf">
     <q-page-container>
       <q-page class="q-pa-md">
-        <div class="row items-center q-gutter-sm q-mb-md">
-          <div class="text-h4 col-grow">Cocina</div>
-
-          <q-select
-            v-model="filtroTipo"
-            :options="['Mesa', 'Domicilio']"
-            clearable
-            dense
-            filled
-            class="w-200"
-            placeholder="Filtrar por tipo"
-          />
-          <q-select
-            v-model="filtroEstado"
-            :options="['Preparación', 'Listo']"
-            clearable
-            dense
-            filled
-            class="w-200"
-            placeholder="Filtrar por estado"
-          />
-
-          <q-btn color="primary" icon="refresh" @click="refrescar" />
-          <q-btn
-            flat
-            :color="expandAll ? 'primary' : 'grey-8'"
-            :label="expandAll ? 'Colapsar todo' : 'Expandir todo'"
-            @click="toggleExpandAll"
-          />
+        <!-- Encabezado -->
+        <div class="row items-center q-mb-md">
+          <div class="col-auto">
+            <q-btn
+              flat
+              round
+              dense
+              icon="arrow_back"
+              @click="goBack"
+              aria-label="Regresar"
+            />
+          </div>
+          <div class="col-grow text-center">
+            <div class="text-h5 text-weight-bold">Cocina</div>
+            <div class="text-caption text-grey-7">Pedidos en preparación</div>
+          </div>
+          <div class="col-auto">
+            <q-btn color="primary" icon="refresh" @click="refrescar" />
+          </div>
         </div>
 
+        <q-separator spaced />
+
+        <!-- Tabla -->
         <q-card>
           <q-card-section>
             <q-table
@@ -42,25 +35,21 @@
               flat
               bordered
               square
+              dense
+              :rows-per-page-options="[0]"
               :loading="store.loading"
-              no-data-label="No hay pedidos"
+              no-data-label="No hay pedidos en preparación"
             >
               <!-- Estado -->
               <template #body-cell-estado="props">
                 <q-td :props="props">
-                  <q-chip
-                    :color="
-                      props.row.estado === 'Preparación' ? 'orange' : 'green'
-                    "
-                    text-color="white"
-                    size="md"
-                  >
+                  <q-chip color="orange" text-color="white" size="md">
                     {{ props.row.estado }}
                   </q-chip>
                 </q-td>
               </template>
 
-              <!-- Detalles (siempre visibles cuando expandAll = true o el id está en expandedRows) -->
+              <!-- Detalles -->
               <template #body-cell-detalles="props">
                 <q-td :props="props">
                   <q-expansion-item
@@ -73,7 +62,6 @@
                     @update:model-value="
                       (val) => setExpanded(props.row._id, val)
                     "
-                    :dense="false"
                   >
                     <q-list bordered class="details-list">
                       <q-item
@@ -120,12 +108,11 @@
               <template #body-cell-acciones="props">
                 <q-td :props="props" class="q-gutter-xs">
                   <q-btn
-                    v-if="props.row.estado === 'Preparación'"
                     dense
                     color="primary"
                     icon="check_circle"
                     label="Marcar listo"
-                    @click="marcarListo(props.row)"
+                    @click="confirmMarcarListo(props.row)"
                   />
                 </q-td>
               </template>
@@ -145,15 +132,14 @@
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import { useQuasar } from "quasar";
 import { usePedidoStore } from "../stores/pedidos.js";
+import { useRouter } from "vue-router";
 import { io } from "socket.io-client";
 
 const $q = useQuasar();
 const store = usePedidoStore();
+const router = useRouter();
 
-const filtroTipo = ref(null);
-const filtroEstado = ref("Preparación"); // por defecto, cocina suele ver "Preparación"
-
-// columnas
+/* ====== columnas (sin Total) ====== */
 const columns = [
   {
     name: "fecha",
@@ -172,27 +158,18 @@ const columns = [
         ? `Mesa ${r.mesaAsignada}`
         : r.clienteNombre || "-",
   },
-  {
-    name: "total",
-    label: "Total",
-    align: "right",
-    field: (r) => `$ ${r.total.toLocaleString()}`,
-  },
   { name: "detalles", label: "Detalles", align: "left" },
   { name: "acciones", label: "Acciones", align: "center" },
 ];
 
-// filtros
-const filtrados = computed(() => {
-  return (store.pedidos || [])
-    .filter((p) => !filtroTipo.value || p.tipoPedido === filtroTipo.value)
-    .filter((p) => !filtroEstado.value || p.estado === filtroEstado.value);
-});
+/* ====== solo “Preparación” ====== */
+const filtrados = computed(() =>
+  (store.pedidos || []).filter((p) => p.estado === "Preparación")
+);
 
-// expand/collapse control
+/* ====== expand control ====== */
 const expandAll = ref(true);
 const expandedRows = ref(new Set());
-
 function isExpanded(id) {
   return expandAll.value || expandedRows.value.has(String(id));
 }
@@ -201,55 +178,118 @@ function setExpanded(id, val) {
   if (val) expandedRows.value.add(key);
   else expandedRows.value.delete(key);
 }
-function toggleExpandAll() {
-  expandAll.value = !expandAll.value;
-  if (!expandAll.value) expandedRows.value.clear();
+
+/* ====== sonido al llegar pedidos nuevos ====== */
+function playDing() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = "sine";
+    o.frequency.value = 880;
+    o.connect(g);
+    g.connect(ctx.destination);
+    g.gain.setValueAtTime(0.001, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.12, ctx.currentTime + 0.02);
+    o.start();
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+    o.stop(ctx.currentTime + 0.3);
+  } catch {}
 }
 
-// acciones
+/* ====== confirm async (corrección Quasar) ======
+   $q.dialog no es “awaitable”, así que lo envolvemos en una Promesa
+================================================= */
+function confirmAsync({
+  title,
+  message,
+  ok = "Sí",
+  cancel = "Cancelar",
+  icon = "check_circle",
+}) {
+  return new Promise((resolve) => {
+    $q.dialog({
+      title,
+      message,
+      html: true,
+      ok: { label: ok, color: "primary", unelevated: true, icon },
+      cancel: { label: cancel, flat: true },
+      persistent: true,
+    })
+      .onOk(() => resolve(true))
+      .onCancel(() => resolve(false));
+  });
+}
+
+/* ====== acciones ====== */
 async function refrescar() {
   await store.getPedidos();
 }
 
-async function marcarListo(row) {
-  const ok = await $q
-    .dialog({
-      title: "Confirmar",
-      message: "¿Marcar pedido como Listo?",
-      cancel: true,
-      persistent: true,
-    })
-    .onOk(() => true)
-    .onCancel(() => false);
+async function confirmMarcarListo(row) {
+  const resumen = `
+    <div class="q-mt-xs">
+      <div><b>Tipo:</b> ${row.tipoPedido}</div>
+      <div><b>${row.tipoPedido === "Mesa" ? "Mesa" : "Cliente"}:</b> ${
+    row.tipoPedido === "Mesa"
+      ? "Mesa " + row.mesaAsignada
+      : row.clienteNombre || "-"
+  }</div>
+      <div class="q-mt-xs text-grey-7">Se moverá a <b>Listo</b>.</div>
+    </div>
+  `;
+  const ok = await confirmAsync({
+    title: "Confirmar",
+    message: resumen,
+    ok: "Marcar listo",
+    icon: "restaurant",
+  });
   if (!ok) return;
+
   const r = await store.cambiarEstado(row._id, "Listo");
   if (r.success) {
-    // mantener visibles los detalles del que cambió, por si se queda en lista
     expandedRows.value.add(String(row._id));
+    $q.notify({ type: "positive", message: "Pedido marcado como Listo" });
     refrescar();
+  } else {
+    $q.notify({ type: "negative", message: "No se pudo actualizar el estado" });
   }
 }
 
-// sockets: refresco + expandir detalles de pedidos impactados
+/* ====== back ====== */
+function goBack() {
+  router.back();
+}
+
+/* ====== sockets ====== */
 let socket;
 onMounted(async () => {
   await refrescar();
   socket = io(import.meta.env.VITE_SOCKET_URL || "/", { path: "/socket.io" });
 
+  // nuevo pedido
   socket.on("pedido:nuevo", ({ pedido }) => {
+    if (pedido?.estado === "Preparación") {
+      playDing();
+    }
     refrescar().then(() => {
-      // expandir detalles del nuevo
-      if (pedido?._id) expandedRows.value.add(String(pedido._id));
+      if (pedido?._id && pedido.estado === "Preparación") {
+        expandedRows.value.add(String(pedido._id));
+      }
     });
   });
 
-  socket.on("pedido:estado", ({ pedidoId }) => {
+  // cambio de estado
+  socket.on("pedido:estado", ({ pedidoId, estado }) => {
+    if (estado === "Preparación") {
+      playDing();
+    }
     refrescar().then(() => {
       if (pedidoId) expandedRows.value.add(String(pedidoId));
     });
   });
 
-  socket.on("pedido:cerrado", ({ pedidoId }) => {
+  socket.on("pedido:cerrado", () => {
     refrescar();
   });
 });
@@ -257,12 +297,10 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   socket?.disconnect();
 });
+
 </script>
 
 <style scoped>
-.w-200 {
-  width: 200px;
-}
 .details-list {
   padding: 6px;
   border-radius: 10px;
