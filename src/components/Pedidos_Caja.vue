@@ -121,7 +121,7 @@
 
         <!-- Diálogo Cierre -->
         <q-dialog v-model="showCierre">
-          <q-card style="min-width: 520px">
+          <q-card>
             <q-card-section class="q-pb-sm">
               <div class="text-h6">Cerrar pedido</div>
               <div class="text-caption text-grey-7">{{ encabezadoPedido }}</div>
@@ -158,9 +158,9 @@
                       </q-chip>
                     </template>
 
-                    <!-- No pagado -->
+                    
                     <template v-else>
-                      <!-- Si vino como EFECTIVO, no se puede cambiar -->
+                      
                       <template
                         v-if="pedidoSeleccionado?.metodoPago === 'efectivo'"
                       >
@@ -174,7 +174,7 @@
                         </q-chip>
                       </template>
 
-                      <!-- Si no tiene método (caso marginal), permitir elegir -->
+                      
                       <template v-else>
                         <q-select
                           v-model="metodoPago"
@@ -676,7 +676,6 @@ async function confirmarCierre() {
   }
 }
 
-/* ===== Sonido al llegar pedidos 'Listo' ===== */
 function playDing() {
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -741,7 +740,6 @@ onBeforeUnmount(() => {
   socket?.disconnect();
 });
 
-// Recalcular totales cuando cambie propina o el pedido
 watchEffect(() => {
   updateTotals();
 });
