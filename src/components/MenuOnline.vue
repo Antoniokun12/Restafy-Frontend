@@ -491,7 +491,7 @@ const habilitaMetodoPago = computed(() => {
 });
 
 onMounted(async () => {
-  await menuStore.getDisponibles();
+  await menuStore.getDisponiblesO();
   socket = io(import.meta.env.VITE_SOCKET_URL || "/", { path: "/socket.io" });
   socket.on("producto:disponibilidad", () => menuStore.getDisponibles());
 });

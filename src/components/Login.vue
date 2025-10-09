@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <div class="login-card">
-      <div class="q-pa-md" >
+      <div class="q-pa-md">
         <h1 class="titulo">Restafy</h1>
         <q-form class="q-gutter-md" @submit.prevent="loginUsuario">
           <q-input
@@ -34,9 +34,9 @@
           </div>
         </q-form>
       </div>
-      <div v-if="useUsuarios.loading" class="overlay">
-        <q-spinner size="xl" color="primary" />
-      </div>
+    </div>
+    <div v-if="useUsuarios.loading" class="overlay">
+      <q-spinner size="xl" color="primary" />
     </div>
   </div>
 </template>
@@ -137,13 +137,13 @@ const onReset = () => {
 .login-card {
   width: 100%;
   max-width: 480px;
-  background: rgba(216, 225, 225, 0.056);   /* transparente */
-  color: #fff;                          /* texto claro */
+  background: rgba(216, 225, 225, 0.056); /* transparente */
+  color: #fff; /* texto claro */
   border-radius: 18px;
   padding: 24px 22px;
-  box-shadow: 0 20px 40px rgba(0,0,0,.25);
-  backdrop-filter: blur(2px);          /* blur */
-  border: 1px solid rgba(255,255,255,0.25);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(2px); /* blur */
+  border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 .titulo {
